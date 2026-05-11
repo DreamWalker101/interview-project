@@ -73,20 +73,36 @@ blocked_slots   jsonb       DEFAULT '[]',              -- used only on config ro
 created_at      timestamptz DEFAULT now()
 ```
 
-### Config row seed (run once in migration):
-```sql
-INSERT INTO leads (id, row_type, blocked_slots)
-VALUES ('00000000-0000-0000-0000-000000000001', 'config', '[]')
-ON CONFLICT (id) DO NOTHING;
-```
-
-**Done when:** Table exists, config row present, RLS off.
 
 ---
 
-## Phase 3–8 — Not started
+## Phase 3 — Customer Landing Page (`/`) ✅ COMPLETE
 
-See `MASTER_PLAN.md` for full task breakdown of Phases 3–8.
+**Goal:** Full multi-step form that writes a correct lead row to Supabase.
+
+### Completed tasks:
+- [x] `date-fns` + `date-fns-tz` installed for timezone handling
+- [x] Tailwind config updated with full Swap design system tokens (colors, fonts, spacing, shadows)
+- [x] `globals.css` updated — Inter + Playfair Display fonts, base styles
+- [x] `layout.tsx` updated — Google Font imports via `next/font/google`
+- [x] `app/page.tsx` — full 5-step intake form (client component):
+  - Step 1: first name, last name, email, phone, notes — client-side validation
+  - Step 2: 5 employee-range clickable tiles with radio-style selection
+  - Step 3: 4 revenue-range tiles — `$1M+` visually distinct (shadow-green accent + "Qualified" badge)
+  - Step 4: 5-day date picker + 26 time slots (8:00 AM–8:30 PM, 30-min); fetches blocked_slots from config row and booked appointments; "Skip — I'll book later" button
+  - Step 5: review summary card + submit with disabled-on-click + loading spinner + error re-enable
+  - Inline success screen after submit (no route change)
+- [x] Stage assignment enforced in submit handler:
+  - `appointment_at IS NULL` → `pipeline_stage = 'lead'`
+  - `appointment_at IS NOT NULL AND revenue_range = '$1M+'` → `pipeline_stage = 'qualified'`
+  - `appointment_at IS NOT NULL AND revenue_range ≠ '$1M+'` → `pipeline_stage = 'appointment'`
+- [x] Build passes clean (`✓ Compiled successfully`, zero TS errors)
+
+---
+
+## Phase 4–8 — Not started
+
+See `MASTER_PLAN.md` for full task breakdown of Phases 4–8.
 
 ---
 
