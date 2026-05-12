@@ -14,6 +14,11 @@ import {
   startOfDay,
   isSameDay,
   format,
+  startOfMonth,
+  getDay,
+  getDaysInMonth,
+  addMonths,
+  isSameMonth,
 } from "date-fns";
 
 // ---------------------------------------------------------------------------
@@ -40,10 +45,10 @@ const EMPLOYEE_OPTIONS = [
 ];
 
 const REVENUE_OPTIONS = [
-  { label: "$0 – $200,000", value: "$0-$200K", premium: false },
-  { label: "$200,000 – $500,000", value: "$200K-$500K", premium: false },
-  { label: "$500,000 – $1,000,000", value: "$500K-$1M", premium: false },
-  { label: "$1,000,000+", value: "$1M+", premium: true },
+  { label: "$0 – $200,000", value: "$0-$200K" },
+  { label: "$200,000 – $500,000", value: "$200K-$500K" },
+  { label: "$500,000 – $1,000,000", value: "$500K-$1M" },
+  { label: "$1,000,000+", value: "$1M+" },
 ];
 
 // ---------------------------------------------------------------------------
@@ -334,48 +339,21 @@ function Step3({ data, onChange, onNext, onBack, errors }: StepProps) {
             <button
               key={option.value}
               onClick={() => onChange({ revenueRange: option.value })}
-              className={`w-full text-left px-lg py-md rounded-xl border transition-all duration-150 ${
-                option.premium
-                  ? selected
-                    ? "border-shadow-green-bg bg-shadow-green-bg text-canvas-white"
-                    : "border-shadow-green-bg/30 bg-shadow-green-bg/5 text-text-black hover:border-shadow-green-bg/60 hover:bg-shadow-green-bg/10"
-                  : selected
-                    ? "border-graphite-inset bg-graphite-inset text-canvas-white"
-                    : "border-outline-gray bg-canvas-white text-text-black hover:border-graphite-inset/40 hover:bg-stone-beige/40"
+              className={`w-full text-left px-lg py-md rounded-xl border transition-all duration-150 text-body font-body ${
+                selected
+                  ? "border-graphite-inset bg-graphite-inset text-canvas-white"
+                  : "border-outline-gray bg-canvas-white text-text-black hover:border-graphite-inset/40 hover:bg-stone-beige/40"
               }`}
             >
-              <div className="flex items-center justify-between gap-sm">
-                <div className="flex items-center gap-sm">
-                  <div
-                    className={`w-4 h-4 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-colors ${
-                      selected
-                        ? "border-mint-accent bg-mint-accent"
-                        : option.premium
-                          ? "border-shadow-green-bg/40"
-                          : "border-outline-gray"
-                    }`}
-                  >
-                    {selected && (
-                      <div
-                        className={`w-2 h-2 rounded-full ${
-                          option.premium ? "bg-shadow-green-bg" : "bg-graphite-inset"
-                        }`}
-                      />
-                    )}
-                  </div>
-                  <span className="text-body font-body">{option.label}</span>
+              <div className="flex items-center gap-sm">
+                <div
+                  className={`w-4 h-4 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-colors ${
+                    selected ? "border-mint-accent bg-mint-accent" : "border-outline-gray"
+                  }`}
+                >
+                  {selected && <div className="w-2 h-2 rounded-full bg-graphite-inset" />}
                 </div>
-                {option.premium && (
-                  <span
-                    className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                      selected
-                        ? "bg-mint-accent text-deep-forest-bg"
-                        : "bg-shadow-green-bg/20 text-shadow-green-bg"
-                    }`}
-                  >
-                    Qualified
-                  </span>
-                )}
+                <span>{option.label}</span>
               </div>
             </button>
           );
@@ -407,7 +385,7 @@ function Step3({ data, onChange, onNext, onBack, errors }: StepProps) {
 }
 
 // ---------------------------------------------------------------------------
-// Step 4 — Calendar Booking
+// Step 4 — Calendar Booking (3-column layout)
 // ---------------------------------------------------------------------------
 
 function Step4({
@@ -422,9 +400,10 @@ function Step4({
   onBack: () => void;
 }) {
   const today = getTodayInTZ(BOOKING_TZ);
-  const days = Array.from({ length: 5 }, (_, i) => addDays(today, i));
+  const availableDays = Array.from({ length: 5 }, (_, i) => addDays(today, i));
 
-  const [selectedDate, setSelectedDate] = useState<Date>(today);
+  const [calendarMonth, setCalendarMonth] = useState<Date>(() => startOfMonth(today));
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [blockedSlots, setBlockedSlots] = useState<Set<string>>(new Set());
   const [bookedSlots, setBookedSlots] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
@@ -462,30 +441,76 @@ function Step4({
     fetchCalendarData();
   }, [fetchCalendarData]);
 
-  const slots = getSlotsForDay(selectedDate);
+  // Restore selected date from existing appointmentAt on mount (e.g. after Back)
+  useEffect(() => {
+    if (data.appointmentAt && !selectedDate) {
+      const zonedDate = toZonedTime(data.appointmentAt, BOOKING_TZ);
+      const match = availableDays.find((d) => isSameDay(d, zonedDate));
+      if (match) setSelectedDate(match);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const isSlotUnavailable = (slot: Date): boolean => {
     const iso = slotToUTCISO(slot, BOOKING_TZ);
     return blockedSlots.has(iso) || bookedSlots.has(iso);
   };
 
+  // Find matching "properly zoned" Date from availableDays by (year, month, day)
+  const findAvailableDay = (year: number, month: number, day: number): Date | null =>
+    availableDays.find(
+      (d) => d.getFullYear() === year && d.getMonth() === month && d.getDate() === day
+    ) ?? null;
+
+  const isDayAvailable = (year: number, month: number, day: number): boolean => {
+    const d = findAvailableDay(year, month, day);
+    if (!d) return false;
+    return getSlotsForDay(d).some((s) => !isSlotUnavailable(s));
+  };
+
+  // Build 42-cell calendar grid (6 rows × 7 cols)
+  const firstOfMonth = startOfMonth(calendarMonth);
+  const daysInMonth = getDaysInMonth(calendarMonth);
+  const startOffset = getDay(firstOfMonth); // 0=Sun
+  const yr = calendarMonth.getFullYear();
+  const mo = calendarMonth.getMonth();
+
+  const prevMonth = addMonths(firstOfMonth, -1);
+  const prevMonthDays = getDaysInMonth(prevMonth);
+  const nextMonth = addMonths(firstOfMonth, 1);
+
+  type GridCell = { day: number; year: number; month: number; inCurrentMonth: boolean };
+  const grid: GridCell[] = [];
+
+  for (let i = startOffset - 1; i >= 0; i--) {
+    grid.push({ day: prevMonthDays - i, year: prevMonth.getFullYear(), month: prevMonth.getMonth(), inCurrentMonth: false });
+  }
+  for (let d = 1; d <= daysInMonth; d++) {
+    grid.push({ day: d, year: yr, month: mo, inCurrentMonth: true });
+  }
+  let nextDay = 1;
+  while (grid.length < 42) {
+    grid.push({ day: nextDay++, year: nextMonth.getFullYear(), month: nextMonth.getMonth(), inCurrentMonth: false });
+  }
+
+  const slots = selectedDate ? getSlotsForDay(selectedDate) : [];
+  const availableSlots = slots.filter((s) => !isSlotUnavailable(s));
+
   const isSlotSelected = (slot: Date): boolean => {
     if (!data.appointmentAt) return false;
     return slotToUTCISO(slot, BOOKING_TZ) === data.appointmentAt.toISOString();
   };
 
-  const hasAvailableSlots = (day: Date): boolean =>
-    getSlotsForDay(day).some((s) => !isSlotUnavailable(s));
-
-  const handleDateSelect = (day: Date) => {
-    setSelectedDate(day);
+  const handleDateSelect = (year: number, month: number, day: number) => {
+    const zonedDay = findAvailableDay(year, month, day);
+    if (!zonedDay) return;
+    setSelectedDate(zonedDay);
     onChange({ appointmentAt: null });
     setSkipped(false);
   };
 
   const handleSlotSelect = (slot: Date) => {
-    const utcDate = fromZonedTime(slot, BOOKING_TZ);
-    onChange({ appointmentAt: utcDate });
+    onChange({ appointmentAt: fromZonedTime(slot, BOOKING_TZ) });
     setSkipped(false);
   };
 
@@ -494,74 +519,203 @@ function Step4({
     setSkipped(true);
   };
 
-  const canProceed = data.appointmentAt !== null || skipped;
+  const canGoPrev = !isSameMonth(calendarMonth, today);
 
   return (
     <div className="flex flex-col gap-lg">
-      <div>
-        <h1 className="text-heading-lg font-heading-lg text-text-black mb-xs">
-          Pick a date and time
-        </h1>
-        <p className="text-body font-body text-secondary">
-          Choose from the next 5 available days, 8:00 AM – 9:00 PM (ET).
-        </p>
-      </div>
+      {/* 3-column booking panel */}
+      <div className="flex flex-col md:flex-row border border-outline-gray rounded-2xl overflow-hidden">
 
-      {/* Date selector */}
-      <div className="flex gap-sm overflow-x-auto pb-1">
-        {days.map((day) => {
-          const available = hasAvailableSlots(day);
-          const selected = isSameDay(day, selectedDate);
-          return (
-            <button
-              key={day.toISOString()}
-              onClick={() => available && handleDateSelect(day)}
-              disabled={!available}
-              className={`flex-shrink-0 flex flex-col items-center px-md py-sm rounded-xl border transition-all duration-150 min-w-[80px] ${
-                !available
-                  ? "border-outline-gray/30 bg-stone-beige/30 text-muted-ash cursor-not-allowed opacity-50"
-                  : selected
-                    ? "border-graphite-inset bg-graphite-inset text-canvas-white"
-                    : "border-outline-gray bg-canvas-white text-text-black hover:border-graphite-inset/40 hover:bg-stone-beige/40"
-              }`}
-            >
-              <span className="text-xs font-medium">{format(day, "EEE")}</span>
-              <span className="text-sm font-bold mt-0.5">{format(day, "d")}</span>
-              <span className="text-xs mt-0.5 opacity-70">{format(day, "MMM")}</span>
-            </button>
-          );
-        })}
-      </div>
+        {/* Left: Meeting info */}
+        <aside className="w-full md:w-[210px] p-6 border-b md:border-b-0 md:border-r border-outline-gray shrink-0">
+          {/* Brand */}
+          <div className="flex items-center gap-2 mb-8">
+            <div className="w-7 h-7 bg-mint-accent rounded-md shrink-0 flex items-center justify-center">
+              <svg className="w-3.5 h-3.5 text-deep-forest-bg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <span className="font-semibold text-text-black text-sm tracking-tight">AigentFlow</span>
+          </div>
 
-      {/* Time slots */}
-      {loading ? (
-        <div className="flex items-center justify-center py-8">
-          <div className="w-6 h-6 border-2 border-graphite-inset border-t-transparent rounded-full animate-spin" />
-        </div>
-      ) : (
-        <div className="grid grid-cols-3 sm:grid-cols-4 gap-sm max-h-56 overflow-y-auto pr-1">
-          {slots.map((slot) => {
-            const unavailable = isSlotUnavailable(slot);
-            const selected = isSlotSelected(slot);
-            return (
+          {/* Meeting details */}
+          <p className="text-xs text-muted-ash font-medium mb-1">Meeting with our team</p>
+          <h3 className="text-lg font-bold text-text-black mb-5 leading-tight">Free Consultation</h3>
+          <div className="flex flex-col gap-3 text-sm text-secondary">
+            <div className="flex items-center gap-2">
+              <svg className="w-4 h-4 text-muted-ash shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+              <span>30 min</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <svg className="w-4 h-4 text-muted-ash shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <polygon points="23 7 16 12 23 17 23 7" />
+                <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+              </svg>
+              <span>Video Call</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <svg className="w-4 h-4 text-muted-ash shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="2" y1="12" x2="22" y2="12" />
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+              </svg>
+              <span>Eastern Time (ET)</span>
+            </div>
+          </div>
+        </aside>
+
+        {/* Center: Month calendar */}
+        <section className="flex-1 p-6 border-b md:border-b-0 md:border-r border-outline-gray flex flex-col">
+          <h3 className="font-bold text-text-black text-sm mb-5">Select a Date</h3>
+
+          <div className="max-w-[280px] mx-auto w-full">
+            {/* Month navigation */}
+            <div className="flex justify-center items-center gap-3 mb-5">
               <button
-                key={slot.toISOString()}
-                onClick={() => !unavailable && handleSlotSelect(slot)}
-                disabled={unavailable}
-                className={`px-sm py-sm rounded-xl border text-xs font-medium transition-all duration-150 ${
-                  unavailable
-                    ? "border-outline-gray/20 bg-stone-beige/20 text-muted-ash/50 cursor-not-allowed line-through"
-                    : selected
-                      ? "border-graphite-inset bg-graphite-inset text-canvas-white"
-                      : "border-outline-gray bg-canvas-white text-text-black hover:border-graphite-inset/40 hover:bg-stone-beige/40"
-                }`}
+                onClick={() => setCalendarMonth((m) => addMonths(m, -1))}
+                disabled={!canGoPrev}
+                aria-label="Previous month"
+                className="p-1.5 hover:bg-stone-beige rounded-full text-muted-ash hover:text-text-black transition-colors disabled:opacity-20 disabled:cursor-not-allowed"
               >
-                {formatSlotTime(slot)}
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} viewBox="0 0 24 24">
+                  <polyline points="15 18 9 12 15 6" />
+                </svg>
               </button>
-            );
-          })}
-        </div>
-      )}
+              <span className="font-medium text-sm text-text-black w-28 text-center">
+                {format(calendarMonth, "MMMM yyyy")}
+              </span>
+              <button
+                onClick={() => setCalendarMonth((m) => addMonths(m, 1))}
+                aria-label="Next month"
+                className="p-1.5 hover:bg-stone-beige rounded-full text-muted-ash hover:text-text-black transition-colors"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} viewBox="0 0 24 24">
+                  <polyline points="9 18 15 12 9 6" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Day of week headers */}
+            <div className="grid grid-cols-7 gap-0.5 text-center mb-2">
+              {["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"].map((d) => (
+                <div key={d} className="text-[0.6rem] font-bold text-muted-ash tracking-wider py-1">
+                  {d}
+                </div>
+              ))}
+            </div>
+
+            {/* Calendar grid */}
+            <div className="grid grid-cols-7 gap-y-0.5 text-center">
+              {grid.map(({ day, year, month, inCurrentMonth }, i) => {
+                if (!inCurrentMonth) {
+                  return (
+                    <div key={i} className="py-2 text-[0.7rem] text-outline-gray/50">
+                      {day}
+                    </div>
+                  );
+                }
+                const available = isDayAvailable(year, month, day);
+                const isSelected =
+                  selectedDate !== null &&
+                  selectedDate.getFullYear() === year &&
+                  selectedDate.getMonth() === month &&
+                  selectedDate.getDate() === day;
+
+                if (!available) {
+                  return (
+                    <div key={i} className="py-2 text-[0.75rem] text-muted-ash/40 font-medium">
+                      {day}
+                    </div>
+                  );
+                }
+                return (
+                  <button
+                    key={i}
+                    onClick={() => handleDateSelect(year, month, day)}
+                    className={`py-2 rounded-full transition-colors text-[0.75rem] font-semibold ${
+                      isSelected
+                        ? "bg-mint-accent text-slate-900 shadow-sm"
+                        : "bg-mint-accent/20 text-slate-800 hover:bg-mint-accent/40"
+                    }`}
+                  >
+                    {day}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Timezone */}
+          <div className="mt-auto pt-5 border-t border-outline-gray/30">
+            <p className="text-[0.65rem] font-bold text-text-black mb-1.5 uppercase tracking-wide">
+              Time zone
+            </p>
+            <div className="flex items-center gap-1.5 text-xs text-muted-ash">
+              <svg className="w-3 h-3 shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="2" y1="12" x2="22" y2="12" />
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+              </svg>
+              <span>Eastern time — US &amp; Canada</span>
+            </div>
+          </div>
+        </section>
+
+        {/* Right: Time slots */}
+        <aside className="w-full md:w-[200px] p-6 bg-slate-50/40">
+          {!selectedDate ? (
+            <p className="text-xs text-muted-ash leading-relaxed mt-2">
+              ← Select a date to view available times
+            </p>
+          ) : loading ? (
+            <div className="flex items-center justify-center py-8">
+              <div className="w-5 h-5 border-2 border-graphite-inset border-t-transparent rounded-full animate-spin" />
+            </div>
+          ) : (
+            <>
+              <p className="text-sm font-semibold text-text-black mb-4">
+                {format(selectedDate, "EEEE, MMMM d")}
+              </p>
+              {availableSlots.length === 0 ? (
+                <p className="text-xs text-muted-ash">No available slots for this day.</p>
+              ) : (
+                <div className="flex flex-col gap-2 max-h-80 overflow-y-auto pr-0.5">
+                  {availableSlots.map((slot, i) => {
+                    const selected = isSlotSelected(slot);
+                    if (selected) {
+                      return (
+                        <div key={i} className="flex gap-2" style={{ height: "46px" }}>
+                          <div className="flex-1 flex items-center justify-center bg-graphite-inset text-canvas-white rounded text-sm font-medium border border-graphite-inset">
+                            {formatSlotTime(slot)}
+                          </div>
+                          <button
+                            onClick={onNext}
+                            className="flex-1 bg-mint-accent text-slate-900 rounded text-sm font-bold border border-mint-accent hover:brightness-95 transition-all shadow-sm focus:outline-none"
+                          >
+                            Confirm
+                          </button>
+                        </div>
+                      );
+                    }
+                    return (
+                      <button
+                        key={i}
+                        onClick={() => handleSlotSelect(slot)}
+                        className="w-full py-3 border border-outline-gray bg-canvas-white rounded text-sm font-medium text-text-black hover:border-graphite-inset/40 hover:bg-stone-beige/30 transition-colors"
+                      >
+                        {formatSlotTime(slot)}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </>
+          )}
+        </aside>
+      </div>
 
       {/* Skip */}
       <div className="text-center">
@@ -582,20 +736,17 @@ function Step4({
         >
           Back
         </button>
-        <button
-          onClick={onNext}
-          disabled={!canProceed}
-          className={`text-label font-label rounded-full px-xl py-md flex items-center gap-sm transition-all ${
-            canProceed
-              ? "bg-mint-accent text-text-black hover:opacity-90"
-              : "bg-outline-gray/30 text-muted-ash cursor-not-allowed"
-          }`}
-        >
-          Next Step
-          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
+        {skipped && (
+          <button
+            onClick={onNext}
+            className="bg-mint-accent text-text-black text-label font-label rounded-full px-xl py-md hover:opacity-90 transition-opacity flex items-center gap-sm"
+          >
+            Next Step
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        )}
       </div>
     </div>
   );
@@ -848,6 +999,9 @@ export default function IntakeForm() {
     }
   };
 
+  // Step 4 uses a wider card to accommodate the 3-column calendar layout
+  const isCalendarStep = step === 4 && !submitted;
+
   return (
     <div className="min-h-screen bg-background flex flex-col font-body text-text-black antialiased selection:bg-mint-accent selection:text-text-black">
       <header className="bg-canvas-white flex justify-between items-center w-full px-xl py-md border-b border-outline-gray">
@@ -857,7 +1011,11 @@ export default function IntakeForm() {
       </header>
 
       <main className="flex-grow flex items-center justify-center p-xl py-3xl">
-        <div className="w-full max-w-[600px] bg-canvas-white rounded-3xl shadow-card-lg p-xl flex flex-col gap-section relative overflow-hidden">
+        <div
+          className={`w-full bg-canvas-white rounded-3xl shadow-card-lg p-xl flex flex-col gap-section relative overflow-hidden transition-all duration-300 ${
+            isCalendarStep ? "max-w-[960px]" : "max-w-[600px]"
+          }`}
+        >
           {submitted ? (
             <SuccessScreen appointmentAt={formData.appointmentAt} />
           ) : (
