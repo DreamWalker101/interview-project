@@ -5,8 +5,8 @@ import { startOfWeek, addDays, addWeeks, set, format } from 'date-fns';
 import { toZonedTime, fromZonedTime } from 'date-fns-tz';
 import { BOOKING_TZ } from '@/lib/constants';
 
-const TIME_SLOTS = Array.from({ length: 26 }, (_, i) => {
-  const totalMinutes = 8 * 60 + i * 30;
+const TIME_SLOTS = Array.from({ length: 13 }, (_, i) => {
+  const totalMinutes = 8 * 60 + i * 60;
   return { hours: Math.floor(totalMinutes / 60), minutes: totalMinutes % 60 };
 });
 
