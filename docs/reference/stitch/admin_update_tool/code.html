@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AigentFlow - Admin Update Tool</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;family=Playfair+Display:wght@100&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error-container": "#93000a",
+                        "inverse-on-surface": "#f1f1f1",
+                        "on-primary-fixed-variant": "#00531b",
+                        "canvas-white": "#ffffff",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-primary-fixed": "#002107",
+                        "on-tertiary-container": "#44715a",
+                        "outline-gray": "#cccccc",
+                        "subtle-sage": "#9cb0a8",
+                        "on-tertiary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "text-black": "#000000",
+                        "muted-ash": "#999999",
+                        "graphite-inset": "#2d3637",
+                        "outline-variant": "#bfcabb",
+                        "background": "#f9f9f9",
+                        "inverse-primary": "#82da88",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary": "#576061",
+                        "shadow-green-bg": "#0d5b3b",
+                        "surface-variant": "#e2e2e2",
+                        "tertiary-container": "#c2f4d6",
+                        "primary": "#0d6d29",
+                        "deep-forest-bg": "#083a26",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#f3f3f3",
+                        "on-secondary-fixed-variant": "#3f4849",
+                        "subtle-gray-card": "#838676",
+                        "inverse-surface": "#303030",
+                        "surface": "#f9f9f9",
+                        "surface-dim": "#dadada",
+                        "on-secondary": "#ffffff",
+                        "tertiary": "#3a6750",
+                        "tertiary-fixed-dim": "#a1d1b5",
+                        "on-background": "#1b1b1b",
+                        "primary-fixed": "#9df7a2",
+                        "secondary-fixed": "#dbe4e5",
+                        "tertiary-fixed": "#bceed0",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed-dim": "#bfc8c9",
+                        "on-tertiary-fixed": "#002113",
+                        "primary-container": "#a3fda7",
+                        "surface-bright": "#f9f9f9",
+                        "stone-beige": "#e9e7e2",
+                        "primary-fixed-dim": "#82da88",
+                        "on-primary-container": "#1d7732",
+                        "on-surface-variant": "#3f493e",
+                        "mint-accent": "#a3fda7",
+                        "agentic-gradient": "linear-gradient(90deg, #82ff87 0%, #a3fda7 50%, #deff82 100%)",
+                        "on-secondary-fixed": "#141d1e",
+                        "secondary-container": "#d8e1e2",
+                        "on-tertiary-fixed-variant": "#214f3a",
+                        "surface-container-high": "#e8e8e8",
+                        "on-secondary-container": "#5b6465",
+                        "error": "#ba1a1a",
+                        "on-surface": "#1b1b1b",
+                        "surface-container": "#eeeeee",
+                        "surface-tint": "#0d6d29",
+                        "outline": "#707a6d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "30px",
+                        "gap-element": "8px",
+                        "xs": "4px",
+                        "md": "12px",
+                        "section": "30px",
+                        "card-padding": "20px",
+                        "lg": "20px",
+                        "3xl": "80px",
+                        "2xl": "40px",
+                        "sm": "8px"
+                    },
+                    "fontFamily": {
+                        "heading": ["inter"],
+                        "label": ["inter"],
+                        "subheading": ["inter"],
+                        "display-mobile": ["playfairDisplay"],
+                        "display": ["playfairDisplay"],
+                        "body": ["inter"],
+                        "heading-lg": ["inter"],
+                        "caption": ["inter"]
+                    },
+                    "fontSize": {
+                        "heading": ["24px", { "lineHeight": "1.4", "fontWeight": "700" }],
+                        "label": ["12px", { "lineHeight": "1.0", "fontWeight": "500" }],
+                        "subheading": ["18px", { "lineHeight": "1.5", "fontWeight": "500" }],
+                        "display-mobile": ["72px", { "lineHeight": "1.0", "letterSpacing": "-0.017em", "fontWeight": "100" }],
+                        "display": ["120px", { "lineHeight": "0.95", "letterSpacing": "-1.22px", "fontWeight": "100" }],
+                        "body": ["15px", { "lineHeight": "1.4", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+                        "heading-lg": ["30px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "caption": ["9px", { "lineHeight": "1.2", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface font-body text-body text-text-black min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="bg-canvas-white text-primary text-heading font-heading docked full-width top-0 border-b border-outline-gray flat no shadows flex justify-between items-center w-full px-xl py-md max-w-full">
+<div class="flex items-center gap-xl">
+<span class="text-heading font-heading font-bold text-text-black">AigentFlow</span>
+<nav class="hidden md:flex gap-lg">
+<a class="text-secondary hover:text-primary transition-colors" href="#">Dashboard</a>
+<a class="text-secondary hover:text-primary transition-colors" href="#">Intake</a>
+<a class="text-secondary hover:text-primary transition-colors" href="#">Schedule</a>
+<a class="text-primary border-b-2 border-primary pb-2 opacity-80 transition-opacity" href="#">Updates</a>
+</nav>
+</div>
+<div class="flex items-center gap-md">
+<div class="hidden md:flex items-center bg-transparent border border-outline-gray rounded-[100px] px-md py-[6px]">
+<span class="material-symbols-outlined text-muted-ash mr-sm" style="font-variation-settings: 'wght' 300;">search</span>
+<input class="bg-transparent border-none outline-none text-body font-body text-text-black w-48 placeholder-muted-ash" placeholder="Search..." type="text"/>
+</div>
+<button class="bg-mint-accent text-text-black rounded-[200px] px-md py-sm text-label font-label font-bold hover:opacity-90 transition-opacity">New Lead</button>
+<div class="flex items-center gap-sm">
+<button class="text-secondary hover:text-primary transition-colors p-sm">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-secondary hover:text-primary transition-colors p-sm">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<img alt="Admin Avatar" class="w-8 h-8 rounded-full ml-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxgsdYS9Hpkp0Hp56hIir-lUjjNdZTKbf6y1qzf23lT-c2lUq-vxIBm7dJvpYsJzY-CXdVAMBY5na5tNvL0S88H7m8cQ9BTYB2bSYWYrbP6cSvxbOIkb1h1LIZtcXVVPuNu6XfD6Mkqek7in6y0y4KIHooL_VXk62lfpmgnPaMF6wpS_Gl7sY4q-LOa9EYxJwk5iB-1PkDlQrZzt41HUizosSCxMwNd219sZV4fxQwMEL8OgD8TjHE-JlEyR_hrl13mihIj6n_TVI"/>
+</div>
+</div>
+</header>
+<div class="flex flex-1 overflow-hidden">
+<!-- SideNavBar -->
+<aside class="bg-deep-forest-bg text-mint-accent docked left-0 h-full w-64 bg-deep-forest-bg flat no shadows flex flex-col h-screen py-xl border-r border-outline-variant/10 hidden md:flex shrink-0">
+<div class="px-xl mb-section">
+<div class="flex items-center gap-md mb-lg">
+<img alt="Brand Logo" class="w-10 h-10 rounded-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOwbE-PCBdwbhJGNzLvAzWj-pDrJ5aIoi38ybCECEQbUq9p6ul9PHsD_rSeGBZXwALxSOcVBt3LQ_grXp1Prut2ihGFuteGcYReFDuCDFYUSlq4G-j85O3nbXsAu6apg0k6ogUZTTsbXi8oL9lTjWVg_lmzq7nazrD-1PMvhL6F1Vcq36fBDrvfywUco7-Ar9RrHcXQ05NflVypkoecPbO-7tYGj_mj7jD4atTvfXqmKqqNTLhcVFT9zxHYpsumRaUjDD9NTtgk8M"/>
+<div>
+<h2 class="text-subheading font-heading font-bold text-canvas-white">Aigent Admin</h2>
+<p class="text-label font-label text-subtle-sage">AI-as-a-Service</p>
+</div>
+</div>
+<button class="w-full bg-mint-accent text-text-black rounded-[200px] py-sm text-label font-label font-bold hover:opacity-90 transition-opacity">Switch to Intake</button>
+</div>
+<nav class="flex-1 px-sm">
+<a class="text-subtle-sage hover:text-canvas-white mx-2 px-md py-sm flex items-center gap-md rounded-xl hover:bg-graphite-inset/50 transition-all mb-xs" href="#">
+<span class="material-symbols-outlined text-subtle-sage">view_kanban</span>
+<span class="text-label font-label">Pipeline</span>
+</a>
+<a class="text-subtle-sage hover:text-canvas-white mx-2 px-md py-sm flex items-center gap-md rounded-xl hover:bg-graphite-inset/50 transition-all mb-xs" href="#">
+<span class="material-symbols-outlined text-subtle-sage">calendar_month</span>
+<span class="text-label font-label">Calendar</span>
+</a>
+<a class="bg-graphite-inset text-mint-accent rounded-xl mx-2 px-md py-sm flex items-center gap-md scale-95 transition-transform mb-xs" href="#">
+<span class="material-symbols-outlined text-mint-accent">search</span>
+<span class="text-label font-label">Lead Lookup</span>
+</a>
+<a class="text-subtle-sage hover:text-canvas-white mx-2 px-md py-sm flex items-center gap-md rounded-xl hover:bg-graphite-inset/50 transition-all" href="#">
+<span class="material-symbols-outlined text-subtle-sage">settings</span>
+<span class="text-label font-label">Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-sm pt-section border-t border-outline-variant/10">
+<a class="text-subtle-sage hover:text-canvas-white mx-2 px-md py-sm flex items-center gap-md rounded-xl hover:bg-graphite-inset/50 transition-all mb-xs" href="#">
+<span class="material-symbols-outlined text-subtle-sage">help_outline</span>
+<span class="text-label font-label">Help</span>
+</a>
+<a class="text-subtle-sage hover:text-canvas-white mx-2 px-md py-sm flex items-center gap-md rounded-xl hover:bg-graphite-inset/50 transition-all" href="#">
+<span class="material-symbols-outlined text-subtle-sage">logout</span>
+<span class="text-label font-label">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 overflow-y-auto p-section flex flex-col items-center justify-start bg-background relative">
+<div class="w-full max-w-[500px] mt-2xl flex flex-col gap-section">
+<!-- State 1: Phone Lookup -->
+<div class="bg-canvas-white rounded-[24px] p-card-padding shadow-[0_4px_24px_rgba(0,0,0,0.09)]">
+<div class="mb-lg">
+<h2 class="text-heading font-heading text-text-black mb-xs">Admin Update Tool</h2>
+<p class="text-body font-body text-secondary">Search for a lead to update their status.</p>
+</div>
+<div class="flex flex-col gap-gap-element mb-lg">
+<label class="text-label font-label text-secondary px-sm">Phone Number Lookup</label>
+<div class="flex items-center bg-transparent border border-outline-gray rounded-[100px] px-md py-sm focus-within:border-primary transition-colors">
+<span class="material-symbols-outlined text-muted-ash mr-sm">phone</span>
+<input class="bg-transparent border-none outline-none text-body font-body text-text-black w-full" placeholder="(555) 123-4567" type="tel" value="(555) 867-5309"/>
+</div>
+</div>
+<button class="w-full bg-mint-accent text-text-black rounded-[200px] py-md text-subheading font-subheading font-bold hover:opacity-90 transition-opacity">Search</button>
+</div>
+<!-- State 2: Lead Found & Update -->
+<div class="bg-canvas-white rounded-[24px] p-card-padding shadow-[0_4px_24px_rgba(0,0,0,0.09)]">
+<!-- Lead Header Info -->
+<div class="flex items-start justify-between border-b border-outline-gray pb-lg mb-lg">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-graphite-inset flex items-center justify-center text-canvas-white">
+<span class="material-symbols-outlined">person</span>
+</div>
+<div>
+<h3 class="text-subheading font-heading font-bold text-text-black">Eleanor Shellstrop</h3>
+<p class="text-label font-label text-secondary">eleanor@example.com</p>
+</div>
+</div>
+<span class="bg-tertiary-container text-on-tertiary-container text-caption font-label px-sm py-[2px] rounded-full font-bold uppercase tracking-wide">In Negotiation</span>
+</div>
+<!-- Details -->
+<div class="grid grid-cols-2 gap-md mb-lg">
+<div class="bg-surface-container-lowest border border-outline-gray rounded-xl p-md">
+<p class="text-caption font-caption text-secondary mb-xs uppercase tracking-wide">Last Contact</p>
+<p class="text-body font-body text-text-black">Oct 24, 2:30 PM</p>
+</div>
+<div class="bg-surface-container-lowest border border-outline-gray rounded-xl p-md">
+<p class="text-caption font-caption text-secondary mb-xs uppercase tracking-wide">Next Appt</p>
+<p class="text-body font-body text-text-black font-medium">Oct 28, 10:00 AM</p>
+</div>
+</div>
+<!-- Update Status Section -->
+<div class="bg-surface rounded-xl p-md mb-lg">
+<h4 class="text-label font-label text-secondary mb-md">Update Status</h4>
+<div class="flex gap-md mb-md">
+<button class="flex-1 bg-primary text-canvas-white rounded-[100px] py-sm text-label font-label font-bold flex items-center justify-center gap-xs hover:opacity-90 transition-opacity border border-primary">
+<span class="material-symbols-outlined text-[16px]">check_circle</span> Sold
+                            </button>
+<button class="flex-1 bg-stone-beige text-secondary rounded-[100px] py-sm text-label font-label font-bold flex items-center justify-center gap-xs hover:bg-surface-container-highest transition-colors border border-outline-gray">
+<span class="material-symbols-outlined text-[16px]">cancel</span> Not Interested
+                            </button>
+</div>
+<!-- Revealed Input for Sold -->
+<div class="flex flex-col gap-gap-element mt-md animate-fade-in">
+<label class="text-label font-label text-secondary px-sm">Sold Amount ($)</label>
+<div class="flex items-center bg-canvas-white border border-outline-gray rounded-[100px] px-md py-sm focus-within:border-primary transition-colors">
+<span class="text-secondary font-body mr-xs">$</span>
+<input class="bg-transparent border-none outline-none text-body font-body text-text-black w-full" placeholder="0.00" type="number" value="25000"/>
+</div>
+</div>
+</div>
+<button class="w-full bg-mint-accent text-text-black rounded-[200px] py-md text-subheading font-subheading font-bold hover:opacity-90 transition-opacity">Submit Update</button>
+</div>
+<!-- State 3: Success -->
+<div class="bg-graphite-inset rounded-[24px] p-card-padding text-center flex flex-col items-center justify-center py-2xl relative overflow-hidden">
+<div class="absolute inset-0 opacity-20" style="background: linear-gradient(90deg, #82ff87 0%, #a3fda7 50%, #deff82 100%);"></div>
+<div class="w-16 h-16 rounded-full bg-mint-accent flex items-center justify-center text-text-black mb-lg relative z-10 shadow-[0_0_30px_rgba(163,253,167,0.3)]">
+<span class="material-symbols-outlined text-[32px]">check</span>
+</div>
+<h3 class="text-heading font-heading text-canvas-white mb-xs relative z-10">Lead Updated!</h3>
+<p class="text-body font-body text-subtle-sage mb-xl relative z-10">Eleanor Shellstrop marked as Sold.</p>
+<button class="bg-transparent text-canvas-white border border-subtle-sage rounded-[200px] px-lg py-sm text-label font-label font-bold hover:bg-canvas-white/10 transition-colors relative z-10 flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]">refresh</span> Search Another
+                    </button>
+</div>
+</div>
+</main>
+</div>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest text-secondary text-caption font-caption full-width bottom-0 border-t border-outline-gray flat no shadows flex flex-col md:flex-row justify-between items-center px-xl py-lg w-full mt-auto shrink-0 z-10">
+<div class="mb-md md:mb-0">
+<span class="text-label font-label font-bold text-primary mr-sm">AigentFlow</span>
+<span>© 2024 AigentFlow AI Services. All rights reserved.</span>
+</div>
+<div class="flex gap-lg">
+<a class="text-secondary hover:text-text-black transition-colors" href="#">Privacy Policy</a>
+<a class="text-secondary hover:text-text-black transition-colors" href="#">Terms of Service</a>
+<a class="text-secondary hover:text-text-black transition-colors" href="#">API Documentation</a>
+</div>
+</footer>
+</body></html>

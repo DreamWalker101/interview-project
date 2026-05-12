@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AigentFlow Admin Login</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;family=Playfair+Display:wght@100&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-error-container": "#93000a",
+                      "inverse-on-surface": "#f1f1f1",
+                      "on-primary-fixed-variant": "#00531b",
+                      "canvas-white": "#ffffff",
+                      "surface-container-highest": "#e2e2e2",
+                      "on-primary-fixed": "#002107",
+                      "on-tertiary-container": "#44715a",
+                      "outline-gray": "#cccccc",
+                      "subtle-sage": "#9cb0a8",
+                      "on-tertiary": "#ffffff",
+                      "error-container": "#ffdad6",
+                      "text-black": "#000000",
+                      "muted-ash": "#999999",
+                      "graphite-inset": "#2d3637",
+                      "outline-variant": "#bfcabb",
+                      "background": "#f9f9f9",
+                      "inverse-primary": "#82da88",
+                      "surface-container-lowest": "#ffffff",
+                      "secondary": "#576061",
+                      "shadow-green-bg": "#0d5b3b",
+                      "surface-variant": "#e2e2e2",
+                      "tertiary-container": "#c2f4d6",
+                      "primary": "#0d6d29",
+                      "deep-forest-bg": "#083a26",
+                      "on-error": "#ffffff",
+                      "surface-container-low": "#f3f3f3",
+                      "on-secondary-fixed-variant": "#3f4849",
+                      "subtle-gray-card": "#838676",
+                      "inverse-surface": "#303030",
+                      "surface": "#f9f9f9",
+                      "surface-dim": "#dadada",
+                      "on-secondary": "#ffffff",
+                      "tertiary": "#3a6750",
+                      "tertiary-fixed-dim": "#a1d1b5",
+                      "on-background": "#1b1b1b",
+                      "primary-fixed": "#9df7a2",
+                      "secondary-fixed": "#dbe4e5",
+                      "tertiary-fixed": "#bceed0",
+                      "on-primary": "#ffffff",
+                      "secondary-fixed-dim": "#bfc8c9",
+                      "on-tertiary-fixed": "#002113",
+                      "primary-container": "#a3fda7",
+                      "surface-bright": "#f9f9f9",
+                      "stone-beige": "#e9e7e2",
+                      "primary-fixed-dim": "#82da88",
+                      "on-primary-container": "#1d7732",
+                      "on-surface-variant": "#3f493e",
+                      "mint-accent": "#a3fda7",
+                      "agentic-gradient": "linear-gradient(90deg, #82ff87 0%, #a3fda7 50%, #deff82 100%)",
+                      "on-secondary-fixed": "#141d1e",
+                      "secondary-container": "#d8e1e2",
+                      "on-tertiary-fixed-variant": "#214f3a",
+                      "surface-container-high": "#e8e8e8",
+                      "on-secondary-container": "#5b6465",
+                      "error": "#ba1a1a",
+                      "on-surface": "#1b1b1b",
+                      "surface-container": "#eeeeee",
+                      "surface-tint": "#0d6d29",
+                      "outline": "#707a6d"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "xl": "30px",
+                      "gap-element": "8px",
+                      "xs": "4px",
+                      "md": "12px",
+                      "section": "30px",
+                      "card-padding": "20px",
+                      "lg": "20px",
+                      "3xl": "80px",
+                      "2xl": "40px",
+                      "sm": "8px"
+              },
+              "fontFamily": {
+                      "heading": [
+                              "Inter", "sans-serif"
+                      ],
+                      "label": [
+                              "Inter", "sans-serif"
+                      ],
+                      "subheading": [
+                              "Inter", "sans-serif"
+                      ],
+                      "display-mobile": [
+                              "Playfair Display", "serif"
+                      ],
+                      "display": [
+                              "Playfair Display", "serif"
+                      ],
+                      "body": [
+                              "Inter", "sans-serif"
+                      ],
+                      "heading-lg": [
+                              "Inter", "sans-serif"
+                      ],
+                      "caption": [
+                              "Inter", "sans-serif"
+                      ]
+              },
+              "fontSize": {
+                      "heading": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "label": [
+                              "12px",
+                              {
+                                      "lineHeight": "1.0",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "subheading": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-mobile": [
+                              "72px",
+                              {
+                                      "lineHeight": "1.0",
+                                      "letterSpacing": "-0.017em",
+                                      "fontWeight": "100"
+                              }
+                      ],
+                      "display": [
+                              "120px",
+                              {
+                                      "lineHeight": "0.95",
+                                      "letterSpacing": "-1.22px",
+                                      "fontWeight": "100"
+                              }
+                      ],
+                      "body": [
+                              "15px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "heading-lg": [
+                              "30px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "caption": [
+                              "9px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+            }
+          }
+        }
+      </script>
+</head>
+<body class="bg-background min-h-screen flex items-center justify-center font-body text-body text-text-black p-lg">
+<main class="w-full max-w-[400px]">
+<div class="bg-canvas-white rounded-[24px] shadow-xl p-card-padding">
+<div class="mb-section text-center">
+<span class="material-symbols-outlined text-primary text-[48px] mb-md" data-icon="shield_person" style="font-variation-settings: 'FILL' 0, 'wght' 200;">shield_person</span>
+<h1 class="font-heading text-heading text-text-black">Admin Login</h1>
+<p class="font-subheading text-subheading text-secondary mt-xs">AigentFlow Access</p>
+</div>
+<form class="space-y-[16px]">
+<div class="flex flex-col gap-xs">
+<label class="font-label text-label text-secondary px-md" for="username">Username</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-muted-ash" data-icon="person" style="font-variation-settings: 'FILL' 0, 'wght' 300;">person</span>
+<input class="w-full bg-transparent border border-outline-gray rounded-[100px] py-[12px] pl-[40px] pr-md font-body text-body text-text-black focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors" id="username" placeholder="Enter your username" type="text"/>
+</div>
+</div>
+<div class="flex flex-col gap-xs">
+<label class="font-label text-label text-secondary px-md" for="password">Password</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-muted-ash" data-icon="lock" style="font-variation-settings: 'FILL' 0, 'wght' 300;">lock</span>
+<input class="w-full bg-transparent border border-outline-gray rounded-[100px] py-[12px] pl-[40px] pr-md font-body text-body text-text-black focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors" id="password" placeholder="Enter your password" type="password"/>
+</div>
+</div>
+<div class="pt-sm pb-md">
+<p class="font-label text-label text-error text-center flex items-center justify-center gap-xs">
+<span class="material-symbols-outlined text-[14px]" data-icon="error" style="font-variation-settings: 'FILL' 1, 'wght' 400;">error</span>
+                        Invalid username or password
+                    </p>
+</div>
+<button class="w-full bg-mint-accent text-text-black font-subheading text-subheading rounded-[200px] py-md flex items-center justify-center gap-sm hover:opacity-90 transition-opacity" type="submit">
+                    Login
+                    <span class="material-symbols-outlined" data-icon="arrow_forward" style="font-variation-settings: 'FILL' 0, 'wght' 400;">arrow_forward</span>
+</button>
+</form>
+<div class="mt-lg text-center">
+<a class="font-label text-label text-secondary hover:text-primary transition-colors bg-transparent px-md py-sm" href="#">Forgot Password?</a>
+</div>
+</div>
+<div class="mt-section text-center">
+<p class="font-caption text-caption text-muted-ash">© 2024 AigentFlow AI Services. Internal Use Only.</p>
+</div>
+</main>
+</body></html>

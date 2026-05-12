@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pipeline Dashboard - AigentFlow</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;family=Playfair+Display:wght@100&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-error-container": "#93000a",
+                      "inverse-on-surface": "#f1f1f1",
+                      "on-primary-fixed-variant": "#00531b",
+                      "canvas-white": "#ffffff",
+                      "surface-container-highest": "#e2e2e2",
+                      "on-primary-fixed": "#002107",
+                      "on-tertiary-container": "#44715a",
+                      "outline-gray": "#cccccc",
+                      "subtle-sage": "#9cb0a8",
+                      "on-tertiary": "#ffffff",
+                      "error-container": "#ffdad6",
+                      "text-black": "#000000",
+                      "muted-ash": "#999999",
+                      "graphite-inset": "#2d3637",
+                      "outline-variant": "#bfcabb",
+                      "background": "#f9f9f9",
+                      "inverse-primary": "#82da88",
+                      "surface-container-lowest": "#ffffff",
+                      "secondary": "#576061",
+                      "shadow-green-bg": "#0d5b3b",
+                      "surface-variant": "#e2e2e2",
+                      "tertiary-container": "#c2f4d6",
+                      "primary": "#0d6d29",
+                      "deep-forest-bg": "#083a26",
+                      "on-error": "#ffffff",
+                      "surface-container-low": "#f3f3f3",
+                      "on-secondary-fixed-variant": "#3f4849",
+                      "subtle-gray-card": "#838676",
+                      "inverse-surface": "#303030",
+                      "surface": "#f9f9f9",
+                      "surface-dim": "#dadada",
+                      "on-secondary": "#ffffff",
+                      "tertiary": "#3a6750",
+                      "tertiary-fixed-dim": "#a1d1b5",
+                      "on-background": "#1b1b1b",
+                      "primary-fixed": "#9df7a2",
+                      "secondary-fixed": "#dbe4e5",
+                      "tertiary-fixed": "#bceed0",
+                      "on-primary": "#ffffff",
+                      "secondary-fixed-dim": "#bfc8c9",
+                      "on-tertiary-fixed": "#002113",
+                      "primary-container": "#a3fda7",
+                      "surface-bright": "#f9f9f9",
+                      "stone-beige": "#e9e7e2",
+                      "primary-fixed-dim": "#82da88",
+                      "on-primary-container": "#1d7732",
+                      "on-surface-variant": "#3f493e",
+                      "mint-accent": "#a3fda7",
+                      "agentic-gradient": "linear-gradient(90deg, #82ff87 0%, #a3fda7 50%, #deff82 100%)",
+                      "on-secondary-fixed": "#141d1e",
+                      "secondary-container": "#d8e1e2",
+                      "on-tertiary-fixed-variant": "#214f3a",
+                      "surface-container-high": "#e8e8e8",
+                      "on-secondary-container": "#5b6465",
+                      "error": "#ba1a1a",
+                      "on-surface": "#1b1b1b",
+                      "surface-container": "#eeeeee",
+                      "surface-tint": "#0d6d29",
+                      "outline": "#707a6d"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "xl": "30px",
+                      "gap-element": "8px",
+                      "xs": "4px",
+                      "md": "12px",
+                      "section": "30px",
+                      "card-padding": "20px",
+                      "lg": "20px",
+                      "3xl": "80px",
+                      "2xl": "40px",
+                      "sm": "8px"
+              },
+              "fontFamily": {
+                      "heading": [
+                              "Inter", "sans-serif"
+                      ],
+                      "label": [
+                              "Inter", "sans-serif"
+                      ],
+                      "subheading": [
+                              "Inter", "sans-serif"
+                      ],
+                      "display-mobile": [
+                              "Playfair Display", "serif"
+                      ],
+                      "display": [
+                              "Playfair Display", "serif"
+                      ],
+                      "body": [
+                              "Inter", "sans-serif"
+                      ],
+                      "heading-lg": [
+                              "Inter", "sans-serif"
+                      ],
+                      "caption": [
+                              "Inter", "sans-serif"
+                      ]
+              },
+              "fontSize": {
+                      "heading": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "label": [
+                              "12px",
+                              {
+                                      "lineHeight": "1.0",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "subheading": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-mobile": [
+                              "72px",
+                              {
+                                      "lineHeight": "1.0",
+                                      "letterSpacing": "-0.017em",
+                                      "fontWeight": "100"
+                              }
+                      ],
+                      "display": [
+                              "120px",
+                              {
+                                      "lineHeight": "0.95",
+                                      "letterSpacing": "-1.22px",
+                                      "fontWeight": "100"
+                              }
+                      ],
+                      "body": [
+                              "15px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "heading-lg": [
+                              "30px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "caption": [
+                              "9px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        .kanban-scroll::-webkit-scrollbar {
+            height: 8px;
+        }
+        .kanban-scroll::-webkit-scrollbar-track {
+            background: theme('colors.surface-container-low');
+            border-radius: theme('borderRadius.full');
+        }
+        .kanban-scroll::-webkit-scrollbar-thumb {
+            background: theme('colors.outline-gray');
+            border-radius: theme('borderRadius.full');
+        }
+        .kanban-scroll::-webkit-scrollbar-thumb:hover {
+            background: theme('colors.secondary');
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body min-h-screen flex flex-col md:flex-row">
+<!-- SideNavBar (Web) -->
+<nav class="hidden md:flex flex-col h-screen py-xl border-r border-outline-variant/10 w-64 fixed left-0 top-0 bg-deep-forest-bg dark:bg-text-black z-20">
+<div class="px-xl mb-xl">
+<h1 class="text-subheading font-heading font-bold text-canvas-white">Aigent Admin</h1>
+<p class="text-subtle-sage text-label font-label mt-xs">AI-as-a-Service</p>
+</div>
+<div class="flex-1 overflow-y-auto px-sm">
+<div class="flex flex-col gap-sm">
+<a class="flex items-center gap-md bg-graphite-inset text-mint-accent rounded-xl mx-2 px-md py-sm hover:bg-graphite-inset/50 transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">view_kanban</span>
+<span class="text-label font-label">Pipeline</span>
+</a>
+<a class="flex items-center gap-md text-subtle-sage hover:text-canvas-white mx-2 px-md py-sm hover:bg-graphite-inset/50 transition-all" href="#">
+<span class="material-symbols-outlined">calendar_month</span>
+<span class="text-label font-label">Calendar</span>
+</a>
+<a class="flex items-center gap-md text-subtle-sage hover:text-canvas-white mx-2 px-md py-sm hover:bg-graphite-inset/50 transition-all" href="#">
+<span class="material-symbols-outlined">search</span>
+<span class="text-label font-label">Lead Lookup</span>
+</a>
+<a class="flex items-center gap-md text-subtle-sage hover:text-canvas-white mx-2 px-md py-sm hover:bg-graphite-inset/50 transition-all" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-label font-label">Settings</span>
+</a>
+</div>
+</div>
+<div class="px-xl mt-auto">
+<button class="w-full bg-mint-accent text-text-black font-label text-label py-md rounded-[200px] hover:opacity-90 transition-opacity mb-section">Switch to Intake</button>
+<div class="flex flex-col gap-sm border-t border-outline-variant/20 pt-md">
+<a class="flex items-center gap-md text-subtle-sage hover:text-canvas-white text-label font-label py-xs" href="#">
+<span class="material-symbols-outlined text-[18px]">help_outline</span> Help
+                </a>
+<a class="flex items-center gap-md text-subtle-sage hover:text-canvas-white text-label font-label py-xs" href="#">
+<span class="material-symbols-outlined text-[18px]">logout</span> Logout
+                </a>
+</div>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-64 flex flex-col min-h-screen">
+<!-- TopAppBar (Mobile & Web Contextual) -->
+<header class="flex justify-between items-center w-full px-xl py-md max-w-full bg-canvas-white border-b border-outline-gray sticky top-0 z-10 md:hidden">
+<div class="text-heading font-heading font-bold text-text-black">AigentFlow</div>
+<div class="flex items-center gap-md">
+<button class="text-secondary hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-secondary hover:text-primary transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+</header>
+<!-- Page Header -->
+<div class="px-xl py-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-md">
+<div>
+<h2 class="text-heading-lg font-heading text-text-black">Pipeline Dashboard</h2>
+<p class="text-secondary text-body font-body mt-xs">Manage active leads and appointments</p>
+</div>
+<button class="bg-mint-accent text-text-black px-xl py-md rounded-[200px] text-label font-label font-bold hover:opacity-90 transition-opacity flex items-center gap-xs">
+<span class="material-symbols-outlined text-[18px]">add</span> New Lead
+            </button>
+</div>
+<!-- Kanban Board -->
+<section class="flex-1 px-xl overflow-hidden flex flex-col mb-section">
+<div class="flex-1 flex gap-section overflow-x-auto pb-md kanban-scroll items-start">
+<!-- Column: Lead -->
+<div class="min-w-[320px] w-[320px] flex flex-col gap-md bg-surface-container-low rounded-xl p-md">
+<div class="flex justify-between items-center px-xs py-sm border-b border-outline-gray">
+<h3 class="text-subheading font-heading text-text-black">Lead</h3>
+<span class="bg-outline-gray text-text-black text-caption font-label px-sm py-[2px] rounded-full">12</span>
+</div>
+<div class="flex flex-col gap-md mt-sm">
+<!-- Card 1 -->
+<div class="bg-canvas-white rounded-xl p-card-padding shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-outline-gray/20 hover:border-mint-accent/50 transition-colors cursor-pointer">
+<div class="flex justify-between items-start mb-md">
+<h4 class="text-body font-heading font-bold text-text-black">Sarah Jenkins</h4>
+<span class="bg-stone-beige text-text-black text-[10px] font-label px-sm py-[2px] rounded-full">$5.2k</span>
+</div>
+<div class="flex flex-col gap-xs mb-md">
+<p class="text-secondary text-label font-body flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]">phone</span> (555) 123-4567
+                                </p>
+<p class="text-secondary text-label font-body flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]">mail</span> sarah.j@example.com
+                                </p>
+</div>
+<div class="pt-sm border-t border-outline-gray/30 flex items-center gap-xs text-subtle-sage">
+<span class="material-symbols-outlined text-[14px]">calendar_clock</span>
+<span class="text-[11px] font-body">No appt set</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Column: Appointment -->
+<div class="min-w-[320px] w-[320px] flex flex-col gap-md bg-surface-container-low rounded-xl p-md">
+<div class="flex justify-between items-center px-xs py-sm border-b border-outline-gray">
+<h3 class="text-subheading font-heading text-text-black">Appointment</h3>
+<span class="bg-mint-accent text-text-black text-caption font-label px-sm py-[2px] rounded-full">3</span>
+</div>
+<div class="flex flex-col gap-md mt-sm">
+<!-- Card 2 -->
+<div class="bg-canvas-white rounded-xl p-card-padding shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-outline-gray/20 border-l-4 border-l-mint-accent hover:border-mint-accent/50 transition-colors cursor-pointer">
+<div class="flex justify-between items-start mb-md">
+<h4 class="text-body font-heading font-bold text-text-black">Marcus Torres</h4>
+<span class="bg-stone-beige text-text-black text-[10px] font-label px-sm py-[2px] rounded-full">$12k</span>
+</div>
+<div class="flex flex-col gap-xs mb-md">
+<p class="text-secondary text-label font-body flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]">phone</span> (555) 987-6543
+                                </p>
+<p class="text-secondary text-label font-body flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]">mail</span> m.torres@corp.com
+                                </p>
+</div>
+<div class="pt-sm border-t border-outline-gray/30 flex items-center gap-xs text-primary">
+<span class="material-symbols-outlined text-[14px]">event</span>
+<span class="text-[11px] font-body font-bold">Oct 24, 2:30 PM</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Column: Qualified -->
+<div class="min-w-[320px] w-[320px] flex flex-col gap-md bg-surface-container-low rounded-xl p-md">
+<div class="flex justify-between items-center px-xs py-sm border-b border-outline-gray">
+<h3 class="text-subheading font-heading text-text-black">Qualified</h3>
+<span class="bg-outline-gray text-text-black text-caption font-label px-sm py-[2px] rounded-full">5</span>
+</div>
+<div class="flex flex-col gap-md mt-sm">
+<!-- Empty State -->
+<div class="border-2 border-dashed border-outline-gray/50 rounded-xl p-xl flex flex-col items-center justify-center text-center opacity-50">
+<span class="material-symbols-outlined text-[32px] text-secondary mb-sm">inventory_2</span>
+<p class="text-label font-body text-secondary">Drop leads here</p>
+</div>
+</div>
+</div>
+<!-- Column: Sold -->
+<div class="min-w-[320px] w-[320px] flex flex-col gap-md bg-surface-container-low rounded-xl p-md opacity-80">
+<div class="flex justify-between items-center px-xs py-sm border-b border-outline-gray">
+<h3 class="text-subheading font-heading text-text-black">Sold</h3>
+<span class="bg-outline-gray text-text-black text-caption font-label px-sm py-[2px] rounded-full">42</span>
+</div>
+<div class="flex flex-col gap-md mt-sm">
+<!-- Empty State -->
+</div>
+</div>
+<!-- Column: Not Interested -->
+<div class="min-w-[320px] w-[320px] flex flex-col gap-md bg-surface-container-low rounded-xl p-md opacity-60">
+<div class="flex justify-between items-center px-xs py-sm border-b border-outline-gray">
+<h3 class="text-subheading font-heading text-text-black">Not Interested</h3>
+<span class="bg-outline-gray text-text-black text-caption font-label px-sm py-[2px] rounded-full">8</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Manage Availability Section -->
+<section class="px-xl pb-3xl">
+<div class="bg-graphite-inset rounded-[24px] p-section text-canvas-white shadow-xl">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-section border-b border-outline-variant/20 pb-md gap-md">
+<div>
+<h2 class="text-heading font-heading text-canvas-white flex items-center gap-sm">
+<span class="material-symbols-outlined">schedule</span> Manage Availability
+                        </h2>
+<p class="text-subtle-sage text-body font-body mt-xs">Define your weekly appointment slots</p>
+</div>
+<div class="flex items-center gap-sm">
+<button class="px-md py-sm rounded-full border border-outline-variant/30 text-canvas-white hover:bg-canvas-white/10 transition-colors text-label font-label">Copy Previous Week</button>
+<button class="bg-mint-accent text-text-black px-lg py-sm rounded-full text-label font-label hover:opacity-90 transition-opacity">Save Schedule</button>
+</div>
+</div>
+<!-- Simplified Calendar Grid (Visual Representation) -->
+<div class="overflow-x-auto">
+<div class="min-w-[800px]">
+<!-- Days Header -->
+<div class="grid grid-cols-8 gap-xs mb-sm">
+<div></div> <!-- Time Column Header -->
+<div class="text-center text-subtle-sage text-label font-label py-sm">Mon</div>
+<div class="text-center text-subtle-sage text-label font-label py-sm">Tue</div>
+<div class="text-center text-canvas-white font-bold text-label font-label py-sm border-b-2 border-mint-accent">Wed</div>
+<div class="text-center text-subtle-sage text-label font-label py-sm">Thu</div>
+<div class="text-center text-subtle-sage text-label font-label py-sm">Fri</div>
+<div class="text-center text-subtle-sage text-label font-label py-sm opacity-50">Sat</div>
+<div class="text-center text-subtle-sage text-label font-label py-sm opacity-50">Sun</div>
+</div>
+<!-- Grid Rows -->
+<div class="flex flex-col gap-xs">
+<!-- 8:00 AM -->
+<div class="grid grid-cols-8 gap-xs items-center">
+<div class="text-right pr-md text-subtle-sage text-caption font-label">8:00 AM</div>
+<div class="h-10 bg-canvas-white/10 rounded-md border border-outline-variant/20 cursor-pointer hover:bg-canvas-white/20 transition-colors"></div>
+<div class="h-10 bg-canvas-white/10 rounded-md border border-outline-variant/20 cursor-pointer hover:bg-canvas-white/20 transition-colors"></div>
+<div class="h-10 bg-mint-accent/20 rounded-md border border-mint-accent/50 cursor-pointer flex items-center justify-center text-mint-accent">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</div>
+<div class="h-10 bg-canvas-white/10 rounded-md border border-outline-variant/20 cursor-pointer hover:bg-canvas-white/20 transition-colors"></div>
+<div class="h-10 bg-canvas-white/10 rounded-md border border-outline-variant/20 cursor-pointer hover:bg-canvas-white/20 transition-colors"></div>
+<div class="h-10 bg-error/20 rounded-md border border-error/50 cursor-not-allowed flex items-center justify-center text-error/80 opacity-50">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</div>
+<div class="h-10 bg-error/20 rounded-md border border-error/50 cursor-not-allowed flex items-center justify-center text-error/80 opacity-50">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</div>
+</div>
+<!-- 8:30 AM -->
+<div class="grid grid-cols-8 gap-xs items-center">
+<div class="text-right pr-md text-subtle-sage text-caption font-label">8:30 AM</div>
+<div class="h-10 bg-canvas-white/10 rounded-md border border-outline-variant/20 cursor-pointer hover:bg-canvas-white/20 transition-colors"></div>
+<div class="h-10 bg-mint-accent/20 rounded-md border border-mint-accent/50 cursor-pointer flex items-center justify-center text-mint-accent">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</div>
+<div class="h-10 bg-mint-accent/20 rounded-md border border-mint-accent/50 cursor-pointer flex items-center justify-center text-mint-accent">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</div>
+<div class="h-10 bg-canvas-white/10 rounded-md border border-outline-variant/20 cursor-pointer hover:bg-canvas-white/20 transition-colors"></div>
+<div class="h-10 bg-canvas-white/10 rounded-md border border-outline-variant/20 cursor-pointer hover:bg-canvas-white/20 transition-colors"></div>
+<div class="h-10 bg-error/20 rounded-md border border-error/50 cursor-not-allowed flex items-center justify-center text-error/80 opacity-50">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</div>
+<div class="h-10 bg-error/20 rounded-md border border-error/50 cursor-not-allowed flex items-center justify-center text-error/80 opacity-50">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</div>
+</div>
+<!-- 9:00 AM -->
+<div class="grid grid-cols-8 gap-xs items-center">
+<div class="text-right pr-md text-subtle-sage text-caption font-label">9:00 AM</div>
+<div class="h-10 bg-mint-accent/20 rounded-md border border-mint-accent/50 cursor-pointer flex items-center justify-center text-mint-accent">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</div>
+<div class="h-10 bg-mint-accent/20 rounded-md border border-mint-accent/50 cursor-pointer flex items-center justify-center text-mint-accent">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</div>
+<div class="h-10 bg-mint-accent/20 rounded-md border border-mint-accent/50 cursor-pointer flex items-center justify-center text-mint-accent">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</div>
+<div class="h-10 bg-mint-accent/20 rounded-md border border-mint-accent/50 cursor-pointer flex items-center justify-center text-mint-accent">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</div>
+<div class="h-10 bg-mint-accent/20 rounded-md border border-mint-accent/50 cursor-pointer flex items-center justify-center text-mint-accent">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</div>
+<div class="h-10 bg-error/20 rounded-md border border-error/50 cursor-not-allowed flex items-center justify-center text-error/80 opacity-50">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</div>
+<div class="h-10 bg-error/20 rounded-md border border-error/50 cursor-not-allowed flex items-center justify-center text-error/80 opacity-50">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</div>
+</div>
+</div>
+<div class="text-center mt-md">
+<button class="text-subtle-sage hover:text-canvas-white text-label font-label flex items-center justify-center w-full gap-xs py-sm">
+<span class="material-symbols-outlined text-[18px]">expand_more</span> Show Full Schedule
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+</body></html>
