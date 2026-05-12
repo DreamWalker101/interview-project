@@ -100,9 +100,93 @@ created_at      timestamptz DEFAULT now()
 
 ---
 
-## Phase 4–8 — Not started
+## Phase 4 — Admin Auth ✅ COMPLETE
 
-See `MASTER_PLAN.md` for full task breakdown of Phases 4–8.
+**Goal:** Hardcoded login protecting `/pipeline` and `/update`.
+
+### Completed tasks:
+- [x] `app/layout.tsx` — Material Symbols Outlined font added for icon support
+- [x] `hooks/useAdminAuth.ts` — `useAdminAuth()` hook reads `sessionStorage`, redirects to `/pipeline/login` if missing; `setAdminAuth()` and `clearAdminAuth()` helpers
+- [x] `app/pipeline/login/page.tsx` — full login form matching Stitch design (shield icon, pill inputs with person/lock icons, mint-accent submit button, inline error state); compares against `NEXT_PUBLIC_ADMIN_USERNAME` + `NEXT_PUBLIC_ADMIN_PASSWORD`; on success writes `sessionStorage.adminAuth = '1'` and redirects to `/pipeline`
+- [x] `app/pipeline/page.tsx` — applies `useAdminAuth`, logout button clears sessionStorage and redirects to `/pipeline/login`
+- [x] `app/update/page.tsx` — applies `useAdminAuth`, logout button clears sessionStorage and redirects to `/pipeline/login`
+- [x] Build passes clean (`✓ Compiled successfully`, zero TS errors)
+
+### Key decisions:
+- `sessionStorage` key: `'adminAuth'`, value: `'1'`
+- Auth check runs in `useEffect` (client-only — no SSR flash issues)
+- ESLint warnings on Material Symbols `<link>` tag are false positives (App Router, not Pages Router)
+
+---
+
+## Phase 5 — Pipeline Kanban Board ✅ COMPLETE
+
+**Goal:** Drag-and-drop Kanban, 5 stages, optimistic updates, sold amount inline edit.
+
+### Completed tasks:
+- [x] `app/pipeline/page.tsx` — main page: fetches all leads `WHERE row_type = 'lead'`, manages DnD state + card errors, logout button, deep-forest-bg top bar
+- [x] `app/pipeline/_components/KanbanColumn.tsx` — `useDroppable` per stage, count badge (mint-accent for Appointment, outline-gray for others), empty-state dashed placeholder, green ring highlight on drag-over
+- [x] `app/pipeline/_components/LeadCard.tsx` — `useDraggable`, visibility:hidden when being dragged (preserves layout), name + revenue badge, phone + email with icons, appointment datetime or "No appt" row, error banner
+- [x] DnD: `PointerSensor` with `distance: 8` constraint (prevent drag on click); `pointerWithin` collision detection; `DragOverlay` shows ghost card following cursor
+- [x] Optimistic updates on drag: immediately update `pipeline_stage` in local state → background Supabase UPDATE → revert + show 4s error banner on card if Supabase fails
+- [x] No re-fetch after drag — all state is local; initial load only
+- [x] Sold column inline edit: click to reveal input, save on Enter or checkmark button (not on blur), `onPointerDown` stops propagation to prevent drag starting, window.confirm before clearing amount, optimistic update + revert-on-error pattern
+
+### Key decisions:
+- Stage values: `'lead'`, `'appointment'`, `'qualified'`, `'sold'`, `'not_interested'` (snake_case)
+- DragOverlay renders a standalone div (no `useDraggable`), avoiding duplicate-id conflict with the column card
+- `visibility: hidden` (not `opacity: 0`) on source card during drag so column height doesn't collapse
+
+---
+
+## Phase 6 — Availability Blocker ✅ COMPLETE
+
+**Goal:** Admin toggles time slots blocked/unblocked; blocked slots hidden from customer calendar.
+
+### Completed tasks:
+- [x] Config row fetched in parallel with leads on `/pipeline` load
+- [x] `app/pipeline/_components/AvailabilityGrid.tsx` — weekly Mon–Sun grid, 26 rows (8:00 AM – 8:30 PM, 30-min slots)
+- [x] Cell states: available = `bg-canvas-white/10` + check icon (mint); blocked = `bg-error/20` + X icon (red)
+- [x] Click toggles slot: optimistic update → Supabase UPDATE config row → revert + 4s error banner on failure
+- [x] Slot ISO format: `fromZonedTime(slot, BOOKING_TZ).toISOString()` — matches exact format used by customer booking form
+- [x] Grid rendered below Kanban board after loading completes (`!loading` guard)
+- [x] Build passes clean (`✓ Compiled successfully`, zero TS errors)
+
+### Key decisions:
+- Week shown: Mon–Sun of the current week in BOOKING_TZ (via `startOfWeek` with `weekStartsOn: 1`)
+- Slot ISO strings stored as UTC ISO (same format customer form uses) — no format mismatch possible
+- Uses Supabase `.update()` (not upsert) since config row is guaranteed to exist from Phase 2 seed
+- `blockedSet = new Set(blockedSlots)` via `useMemo` for O(1) lookup per cell render
+
+---
+
+## Phase 7 — Admin Update Tool (`/update`) ✅ COMPLETE
+
+**Goal:** Phone lookup → mark lead Sold or Not Interested with edge case handling.
+
+### Completed tasks:
+- [x] Top bar: `bg-deep-forest-bg` with Logout button — consistent with pipeline page
+- [x] **State: search** — phone input (pill style, phone icon), Search button (mint-accent), inline error for no-result and Supabase failures
+- [x] Supabase query: `WHERE row_type = 'lead' AND phone = $input` (exact match)
+- [x] **State: no-result** — inline error "No lead found with this phone number." in search card
+- [x] **State: multi-result** — list of all matching leads (avatar circle, name, email, stage badge); click any to proceed
+- [x] **State: detail** — lead header (name, email, stage badge), phone + appointment detail grid, Sold/Not Interested selector buttons
+- [x] Sold selected → reveals Sold Amount ($) number input
+- [x] Submit → `UPDATE leads SET pipeline_stage, sold_amount WHERE id`; disabled until outcome selected; loading state
+- [x] **State: success** — `graphite-inset` card with gradient overlay, mint check circle, success message with amount if sold, "Search Another" button resets to search
+- [x] Build passes clean (`✓ Compiled successfully`, zero TS errors)
+
+### Key decisions:
+- Phone lookup is **exact match** (no fuzzy) — matches how leads are inserted from the intake form
+- `sold_amount` written as `null` if amount field is left empty (even when outcome is Sold)
+- Success message includes formatted dollar amount via `Intl.NumberFormat` when amount is provided
+- Search card stays visible in multi/detail states so admin can search again without scrolling
+
+---
+
+## Phase 8 — Not started
+
+See `MASTER_PLAN.md` for full task breakdown of Phase 8 (Polish & Vercel Deploy).
 
 ---
 
